@@ -37,3 +37,7 @@ div.tooltip {
   box-shadow: 0 4px 6px hsla(0, 0%, 0%, 0.2);
   pointer-events: none;
 }
+
+.hoveredRect {
+  border: 1px solid black;
+}

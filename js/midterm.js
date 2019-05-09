@@ -21,6 +21,7 @@
   function makeBarChart(csvData) {
     data = csvData; // assign data as global variable
     console.log(data);
+
     // get arrays of avg viewers per season and years for each season
     const avgViewersData = data.map(season => season['Avg. Viewers (mil)']);
 
@@ -65,7 +66,7 @@
   // plot all the data points on the SVG
   // and add tooltip functionality
   function plotData(map) {
-    // mapping functions
+    // scaling functions
     const xScale = map.xScale;
     const yScale = map.yScale;
 
@@ -76,6 +77,7 @@
       .attr('class', 'tooltip')
       .style('opacity', 0);
 
+    // add text to top of each bar
     svgContainer
       .selectAll('.text')
       .data(data)
@@ -89,6 +91,7 @@
       .text(5)
       .text(d => d['Avg. Viewers (mil)']);
 
+    // create each bar for each season
     svgContainer
       .selectAll()
       .data(data)
@@ -105,7 +108,9 @@
       )
 
       // add tooltip functionality to points
-      .on('mouseover', d => {
+      .on('mouseover', function(d) {
+        d3.select(this).attr('style', 'outline: thin solid black;');
+
         tooltip
           .transition()
           .duration(200)
@@ -134,7 +139,8 @@
           .style('left', d3.event.pageX + 5 + 'px')
           .style('top', d3.event.pageY + 10 + 'px');
       })
-      .on('mouseout', d => {
+      .on('mouseout', function() {
+        d3.select(this).attr('style', 'outline: none;');
         tooltip
           .transition()
           .duration(500)
