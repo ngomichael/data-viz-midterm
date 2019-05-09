@@ -38,6 +38,41 @@
 
     // // plot data as points and add tooltip functionality
     plotData(mapFunctions);
+
+    makeAvgLine(avgViewersData, mapFunctions, axesLimits);
+  }
+
+  // make line for avg. viewers
+  function makeAvgLine(avgViewersData, mapFunctions, axesLimits) {
+    const unRoundedAvg = _.sum(avgViewersData) / avgViewersData.length;
+    const roundedViewerAvg = Math.max(
+      Math.round(unRoundedAvg * 10) / 10,
+      2.8
+    ).toFixed(1);
+
+    const x1 = axesLimits.xMin - 1;
+    const x2 = axesLimits.xMax + 1;
+
+    // create line for avg. viewers
+    svgContainer
+      .append('line')
+      .style('stroke', 'black')
+      .attr('x1', mapFunctions.xScale(x1)) // x position of the first end of the line
+      .attr('y1', mapFunctions.yScale(roundedViewerAvg)) // y position of the first end of the line
+      .attr('x2', mapFunctions.xScale(x2)) // x position of the second end of the line
+      .attr('y2', mapFunctions.yScale(roundedViewerAvg))
+      .on('mouseover', function(d) {});
+
+    const avgTooltip = d3
+      .select('body')
+      .append('div')
+      .attr('class', 'avgTooltip')
+      .style('opacity', 1)
+      .html('Average = ' + roundedViewerAvg);
+    // .style('left', d3.event.pageX + 5 + 'px')
+    // .style('top', d3.event.pageY + 10 + 'px');
+
+    console.log(roundedViewerAvg);
   }
 
   // make title and axes labels
@@ -51,7 +86,7 @@
 
     svgContainer
       .append('text')
-      .attr('x', 230)
+      .attr('x', 430)
       .attr('y', 495)
       .style('font-size', '10pt')
       .text('Year');
@@ -107,7 +142,7 @@
         d.Data === 'Actual' ? 'rgb(88, 154, 220)' : 'rgb(124, 116, 111)'
       )
 
-      // add tooltip functionality to points
+      // add tooltip functionality to points and add outline to bars
       .on('mouseover', function(d) {
         d3.select(this).attr('style', 'outline: thin solid black;');
 
@@ -133,7 +168,7 @@
               'Most Watched Episode: ' +
               d['Most watched episode'] +
               '<br/>' +
-              'Viewers (mil) ' +
+              'Viewers (mil): ' +
               d['Viewers (mil)']
           )
           .style('left', d3.event.pageX + 5 + 'px')
@@ -167,7 +202,12 @@
     };
 
     // plot x-axis at bottom of SVG
-    const xAxis = d3.axisBottom().scale(xScale);
+    const xAxis = d3
+      .axisBottom()
+      .scale(xScale)
+      .tickSizeOuter(0)
+      .ticks(25);
+
     svgContainer
       .append('g')
       .attr('transform', 'translate(0, 450)')
