@@ -12,18 +12,23 @@
       .attr('width', 1000)
       .attr('height', 500);
 
-    fetch('../data/SeasonsData.json')
-      .then(res => res.json())
-      .then(csvData => makeBarChart(csvData));
+    d3.csv('../data/season_data.csv').then(csvData => makeBarChart(csvData));
+
+    // fetch('../data/SeasonsData.json')
+    //   .then(res => res.json())
+    //   .then(csvData => makeBarChart(csvData));
   };
 
   // make bar chart with trend line
   function makeBarChart(csvData) {
     data = csvData; // assign data as global variable
+    console.log(data);
 
     // get arrays of avg viewers per season and years for each season
-    const avgViewersData = data.map(season => season['Avg. Viewers (mil)']);
-    const years = data.map(season => season['Year']);
+    const avgViewersData = data.map(season =>
+      parseFloat(season['Avg. Viewers (mil)'])
+    );
+    const years = data.map(season => parseInt(season['Year']));
 
     // find data limits
     const axesLimits = findMinMax(years, avgViewersData);
