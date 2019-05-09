@@ -22,6 +22,11 @@ path {
   shape-rendering: crispEdges;
 }
 
+.dashed {
+  stroke-dasharray: 5, 5;
+  stroke-width: 4;
+}
+
 div.avgTooltip {
   position: absolute;
   display: flex;

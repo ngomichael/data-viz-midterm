@@ -20,7 +20,6 @@
   // make scatter plot with trend line
   function makeBarChart(csvData) {
     data = csvData; // assign data as global variable
-    console.log(data);
 
     // get arrays of avg viewers per season and years for each season
     const avgViewersData = data.map(season => season['Avg. Viewers (mil)']);
@@ -44,35 +43,45 @@
 
   // make line for avg. viewers
   function makeAvgLine(avgViewersData, mapFunctions, axesLimits) {
-    const unRoundedAvg = _.sum(avgViewersData) / avgViewersData.length;
-    const roundedViewerAvg = Math.max(
-      Math.round(unRoundedAvg * 10) / 10,
-      2.8
-    ).toFixed(1);
+    const unroundedAvg = _.sum(avgViewersData) / avgViewersData.length;
+    const roundedViewerAvg = Math.round(unroundedAvg * 100) / 100;
 
     const x1 = axesLimits.xMin - 1;
     const x2 = axesLimits.xMax + 1;
 
-    // create line for avg. viewers
-    svgContainer
-      .append('line')
-      .style('stroke', 'black')
-      .attr('x1', mapFunctions.xScale(x1)) // x position of the first end of the line
-      .attr('y1', mapFunctions.yScale(roundedViewerAvg)) // y position of the first end of the line
-      .attr('x2', mapFunctions.xScale(x2)) // x position of the second end of the line
-      .attr('y2', mapFunctions.yScale(roundedViewerAvg))
-      .on('mouseover', function(d) {});
-
+    // create avg viewers line tooltip
     const avgTooltip = d3
       .select('body')
       .append('div')
       .attr('class', 'avgTooltip')
-      .style('opacity', 1)
-      .html('Average = ' + roundedViewerAvg);
-    // .style('left', d3.event.pageX + 5 + 'px')
-    // .style('top', d3.event.pageY + 10 + 'px');
+      .style('opacity', 0);
 
-    console.log(roundedViewerAvg);
+    // create line for avg. viewers
+    svgContainer
+      .append('line')
+      .style('stroke', 'lightgray')
+      .attr('class', 'dashed')
+      .attr('x1', mapFunctions.xScale(x1)) // x position of the first end of the line
+      .attr('y1', mapFunctions.yScale(roundedViewerAvg)) // y position of the first end of the line
+      .attr('x2', mapFunctions.xScale(x2)) // x position of the second end of the line
+      .attr('y2', mapFunctions.yScale(roundedViewerAvg))
+      .on('mouseover', function(d) {
+        avgTooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 1);
+
+        avgTooltip
+          .html('Average = ' + roundedViewerAvg)
+          .style('left', d3.event.pageX + 5 + 'px')
+          .style('top', d3.event.pageY + 10 + 'px');
+      })
+      .on('mouseout', function(d) {
+        avgTooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 0);
+      });
   }
 
   // make title and axes labels
@@ -122,7 +131,7 @@
       .attr('x', d => {
         return xScale(d['Year']) - 15;
       })
-      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 10)
+      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 3)
       .text(5)
       .text(d => d['Avg. Viewers (mil)']);
 
@@ -135,8 +144,8 @@
       .attr('x', d => {
         return xScale(d['Year']) - 15;
       })
-      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 5)
-      .attr('height', d => 455 - yScale(d['Avg. Viewers (mil)']))
+      .attr('y', d => yScale(d['Avg. Viewers (mil)']))
+      .attr('height', d => 450 - yScale(d['Avg. Viewers (mil)']))
       .attr('width', '30px')
       .attr('fill', d =>
         d.Data === 'Actual' ? 'rgb(88, 154, 220)' : 'rgb(124, 116, 111)'
