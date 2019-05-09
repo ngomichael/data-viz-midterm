@@ -13,10 +13,6 @@
       .attr('height', 500);
 
     d3.csv('../data/season_data.csv').then(csvData => makeBarChart(csvData));
-
-    // fetch('../data/SeasonsData.json')
-    //   .then(res => res.json())
-    //   .then(csvData => makeBarChart(csvData));
   };
 
   // make bar chart with trend line
