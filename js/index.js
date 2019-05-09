@@ -18,7 +18,6 @@
   // make bar chart with trend line
   function makeBarChart(csvData) {
     data = csvData; // assign data as global variable
-    console.log(data);
 
     // get arrays of avg viewers per season and years for each season
     const avgViewersData = data.map(season =>
