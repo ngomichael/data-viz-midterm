@@ -20,7 +20,7 @@
   // make scatter plot with trend line
   function makeBarChart(csvData) {
     data = csvData; // assign data as global variable
-
+    console.log(data);
     // get arrays of avg viewers per season and years for each season
     const avgViewersData = data.map(season => season['Avg. Viewers (mil)']);
 
@@ -77,6 +77,19 @@
       .style('opacity', 0);
 
     svgContainer
+      .selectAll('.text')
+      .data(data)
+      .enter()
+      .append('text')
+      .attr('class', 'label')
+      .attr('x', d => {
+        return xScale(d['Year']) - 15;
+      })
+      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 10)
+      .text(5)
+      .text(d => d['Avg. Viewers (mil)']);
+
+    svgContainer
       .selectAll()
       .data(data)
       .enter()
@@ -84,39 +97,49 @@
       .attr('x', d => {
         return xScale(d['Year']) - 15;
       })
-      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 50)
-      .attr('height', d => 500 - yScale(d['Avg. Viewers (mil)']))
-      .attr('width', '30px');
+      .attr('y', d => yScale(d['Avg. Viewers (mil)']) - 5)
+      .attr('height', d => 455 - yScale(d['Avg. Viewers (mil)']))
+      .attr('width', '30px')
+      .attr('fill', d =>
+        d.Data === 'Actual' ? 'rgb(88, 154, 220)' : 'rgb(124, 116, 111)'
+      )
 
-    // // add tooltip functionality to points
-    // .on('mouseover', d => {
-    //   tooltip
-    //     .transition()
-    //     .duration(200)
-    //     .style('opacity', 0.9);
+      // add tooltip functionality to points
+      .on('mouseover', d => {
+        tooltip
+          .transition()
+          .duration(200)
+          .style('opacity', 1);
 
-    //   tooltip
-    //     .html(
-    //       d.location +
-    //         '<br/>' +
-    //         'year: ' +
-    //         d['time'] +
-    //         '<br/>' +
-    //         'life expectancy: ' +
-    //         d['life_expectancy'] +
-    //         '<br/>' +
-    //         'fertility_rate: ' +
-    //         d['fertility_rate']
-    //     )
-    //     .style('left', d3.event.pageX + 5 + 'px')
-    //     .style('top', d3.event.pageY + 10 + 'px');
-    // })
-    // .on('mouseout', d => {
-    //   tooltip
-    //     .transition()
-    //     .duration(500)
-    //     .style('opacity', 0);
-    // });
+        tooltip
+          .html(
+            'Season #' +
+              d.Year +
+              '<br/>' +
+              'Year: ' +
+              d.Year +
+              '<br/>' +
+              'Episodes: ' +
+              d.Episodes +
+              '<br/>' +
+              'Avg Viewers (mil): ' +
+              d['Avg. Viewers (mil)'] +
+              '<br/>' +
+              'Most Watched Episode: ' +
+              d['Most watched episode'] +
+              '<br/>' +
+              'Viewers (mil) ' +
+              d['Viewers (mil)']
+          )
+          .style('left', d3.event.pageX + 5 + 'px')
+          .style('top', d3.event.pageY + 10 + 'px');
+      })
+      .on('mouseout', d => {
+        tooltip
+          .transition()
+          .duration(500)
+          .style('opacity', 0);
+      });
   }
 
   // draw the axes and ticks
