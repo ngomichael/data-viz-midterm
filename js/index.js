@@ -84,8 +84,45 @@
       });
   }
 
-  // make title and axes labels
+  // make title and axes labels and legend
   function makeLabels() {
+    svgContainer
+      .append('text')
+      .attr('x', 650)
+      .attr('y', 100)
+      .style('font-size', '10pt')
+      .text('Viewership Data');
+
+    svgContainer
+      .append('text')
+      .attr('x', 680)
+      .attr('y', 135)
+      .style('font-size', '10pt')
+      .text('Actual');
+
+    svgContainer
+      .append('text')
+      .attr('x', 680)
+      .attr('y', 170)
+      .style('font-size', '10pt')
+      .text('Estimated');
+
+    svgContainer
+      .append('rect')
+      .attr('x', 650)
+      .attr('y', 120)
+      .attr('height', '20px')
+      .attr('width', '20px')
+      .attr('fill', 'rgb(88, 154, 220)');
+
+    svgContainer
+      .append('rect')
+      .attr('x', 650)
+      .attr('y', 155)
+      .attr('height', '20px')
+      .attr('width', '20px')
+      .attr('fill', 'rgb(124, 116, 111)');
+
     svgContainer
       .append('text')
       .attr('x', 100)
